@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PAC Calculator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Lato', sans-serif;
+            margin: 0;
+            background: #f5f9fc;
+            color: #333;
+            background-image: url('math-bg.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .container-fluid {
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .nav-bar {
+            background-color: #0D243C;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            flex-direction: column;
+        }
+
+        .nav-bar h1 {
+            font-size: 2rem;
+            margin: 0;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 25px;
+            margin-top: 10px;
+        }
+
+        .nav-links a,
+        .nav-links .dropdown-toggle {
+            color: #254f7c;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 18px;
+            transition: color 0.3s ease;
+            display: inline-block;
+            padding: 10px 0;
+        }
+
+        .nav-links a:hover,
+        .nav-links .dropdown-toggle:hover {
+            color: #254f7c;
+        }
+
+        .dropdown-menu {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 0;
+            text-align: left;
+            margin-top: 0;
+        }
+
+        .dropdown-item {
+            color: #0D243C;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-bottom: 1px solid #ccc;
+            transition: background-color 0.3s ease;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f5f5f5;
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-section {
+            display: none;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: white;
+            max-width: calc(100% - 40px);
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 20px auto 0 auto;
+            height: calc(100vh - px);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .content h2 {
+            background-color: #0D243C;
+            color: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            font-size: 1.5rem;
+        }
+
+        .calculator {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            width: 100%;
+            max-width: 350px;
+            text-align: center;
+            margin: 40px auto;
+            border: 2px solid #0D243C;
+        }
+
+        .calculator h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        .calculator input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #0D243C;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .calculator input[type="text"]:focus {
+            outline: none;
+            border-color: #0D243C;
+        }
+
+        .calculator button {
+            background-color: #0D243C;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .calculator button:hover {
+            background-color: #135e1c;
+        }
+
+        .results {
+            margin-top: 20px;
+            background-color: #ecf0f1;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: left;
+        }
+
+        .results div {
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .reset-btn {
+            margin-top: 10px;
+            background-color: #7b2a21;
+        }
+
+        .reset-btn:hover {
+            background-color: #7b2a21;
+        }
+
+        @media (max-width: 767.98px) {
+
+            #about,
+            #more {
+                display: flex;
+                flex-direction: row;
+                height: auto;
+                width: 100%;
+            }
+
+            .sidebar {
+                width: 30%;
+                padding: 10px;
+                box-sizing: border-box;
+                text-align: left;
+                min-width: 150px;
+            }
+
+            .content {
+                width: 100%;
+                padding: 10px;
+                box-sizing: border-box;
+                font-size: 0.8rem;
+                text-align: left;
+            }
+
+            .container-fluid {
+                overflow-x: hidden;
+            }
+
+            .content h2 {
+                font-size: 1.25rem;
+                padding: 10px;
+            }
+        }
+
+        @media (min-width: 768px) and (max-width: 1023.98px) {
+
+            #about,
+            #more {
+                display: flex;
+                flex-direction: row;
+                height: auto;
+            }
+
+            .sidebar {
+                width: 30%;
+                padding: 15px;
+            }
+
+            .content {
+                width: 70%;
+                padding: 15px;
+                font-size: 1rem;
+            }
+        }
+        @media (min-width: 1024px) {
+            body {
+            font-size: 18px; 
+            }
+
+            .nav-bar h1 {
+             font-size: 2.5rem; 
+            }
+
+            .nav-links a, .nav-links .dropdown-toggle {
+            font-size: 20px; 
+            }
+
+           .content h2 {
+           font-size: 2rem; 
+            }
+
+           .calculator h1 {
+            font-size: 2.5rem;
+            }
+
+          .calculator input[type="text"] {
+          font-size: 1.25rem; 
+            }
+
+          .calculator button {
+           font-size: 1.25rem; 
+            }
+
+           .results div {
+           font-size: 1.25rem; 
+           }
+           }
+
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="nav-bar">
+            <h1>PAC CALCULATOR</h1>
+            <div class="nav-links">
+                <div class="dropdown">
+                    <a class="btn dropdown-toggle text-white" href="#" id="aboutDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">ABOUT</a>
+                    <ul class="dropdown-menu text-center" aria-labelledby="aboutDropdown">
+                        <li><a class="dropdown-item" href="javascript:void(0)" onclick="navigateToSection('definition')">DEFINITION</a></li>
+                        <li><a class="dropdown-item" href="javascript:void(0)" onclick="navigateToSection('history')">HISTORY</a></li>
+                        <li><a class="dropdown-item" href="javascript:void(0)" onclick="navigateToSection('author')">AUTHOR</a></li>
+                    </ul>
+                </div>
+                <a href="javascript:void(0)" onclick="navigateToSection('calculator')">CALCULATOR</a>
+                <div class="dropdown">
+                    <a class="btn dropdown-toggle text-white" href="#" id="moreDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">MORE</a>
+                    <ul class="dropdown-menu text-center" aria-labelledby="moreDropdown">
+                        <li><a class="dropdown-item" href="javascript:void(0)" onclick="navigateToSection('numbers')">FIRST 1-1000 PAC NUMBERS</a></li>
+                        <li><a class="dropdown-item" href="javascript:void(0)" onclick="navigateToSection('manual-computation')">MANUAL COMPUTATION</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="definition" class="info-section">
+            <div class="content">
+            <h2>Definitions</h2>
+                <p>
+                    <strong>PAC Numbers</strong> are composite numbers
+                     where the digit sum of a number is equal to the digit sum of its 
+                     prime factors excluding the multiplicities.
+                </p>
+                <p>
+                    The name <strong>"PAC"</strong> came from the acronym
+                     of the last names of its founders (Polido, Antalan, and Calakhan)
+                </p>
+<br>
+                 <p> <strong>Composite Numbers</strong> are numbers that has 2 or more 
+                    factors excluding 1 and itself.
+                </p>
+<br>
+                 <p><strong>Prime Numbers</strong> are numbers whose factors are only 1 and itself</p>
+                 <p><strong>NOTE:</strong> "1" is not prime nor composite </p>
+<br>
+                 <p><strong>Multiplicity</strong> is the degree of each factor, or the number of times a factor appears</p>
+<br>
+            <p> <strong>Smith numbers</strong> are composite numbers where its digit sum is equal to the digit
+                 sum of <strong>all its prime factors</strong>. Building on this, PAC numbers share a 
+                 similar foundation but differ by excluding the multiplicity of prime factors in their calculation,
+                  making them a refined version of Smith numbers.
+                </p>
+            </div>
+        </div>
+        
+        <div id="history" class="info-section">
+            <div class="content">
+                <h2>History of PAC Numbers</h2>
+                <p>
+                    The <strong>PAC number</strong> was discovered by Professor John Rafael M. Antalan and his students, 
+                    Joseph Polido and John Paul V. Calakhan, at <strong>Central Luzon State University (CLSU)</strong>.
+                     It evolved from the <strong>Smith number</strong> concept, which was introduced by Albert Wilansky in
+                      1982. 
+                </p>
+                <p> <strong>Smith numbers</strong> are composite numbers where its digit sum is equal to the digit
+                    sum of <strong>all its prime factors</strong>. Building on this, PAC numbers share a 
+                    similar foundation but differ by excluding the multiplicity of prime factors in their calculation,
+                     making them a refined version of Smith numbers.
+                   </p>
+                <p>
+                    This transition from Smith to PAC numbers marks a significant advancement in number theory. 
+                    While both involve prime factorization, the way multiplicity is handled in PAC numbers represents a
+                     more nuanced approach. This concept has since been further developed and studied by students at <strong>
+                    Muñoz National High School Main Senior High School</strong>.
+                    Whereas STEM students; Kimm Ara Shaeenna S. Juson and Althea Marie D. Labiano,  has identified 
+                    the first 1000 PAC numbers, and <strong>proven its infiniteness.</strong>
+                </p>
+                
+            </div>
+        </div>
+        
+        <div id="author" class="info-section">
+            <div class="content">
+                <h2>Authors of PAC Study</h2>
+                <p>
+                    A new study on PAC numbers has been published, and this website was created for users and individuals interested in exploring new number theories.
+                </p>
+                <p>
+                    <strong>Credits for Research Paper:</strong>
+                </p>
+                <ul>
+                    <li><strong>Title:</strong> PAC Calculator: Innovating Prime Factorization in Number Theory Exploration</li>
+                    <li><strong>Authors:</strong> Crisostomo, Keith Mallory S.; Gabriel, Reign Esther B.; Ibay, Lea Mae C.; Javillonar, Celestine C.</li>
+                    <li><strong>Research Advisers:</strong> William M. Cinense, Kathlyn Joy Manlusoc</li>
+                    <li><strong>Affiliations:</strong> Muñoz National High School Main – Senior High School, STEM Faculty</li>
+                    <li><strong>Acknowledgments:</strong> Special thanks to John Rafael Antalan for his support as a consultant for this research.</li>
+                </ul>
+                <p>
+                    <strong>Credits for Website:</strong>
+                </p>
+                <ul>
+                    <li><strong>Developed by:</strong> Crisostomo, Keith Mallory S.; Gabriel, Reign Esther B.; Ibay, Lea Mae C.; Javillonar, Celestine C.</li>
+                    <li><strong>Consultant:</strong> Special thanks to Sir Balarama Juganas for his assistance in the development of this website.</li>
+                </ul>
+                <p>
+                    <strong>Credits for Referenced Research Paper</strong>
+                </p>
+                <ul>
+                    <li><strong>Title:</strong> Determining PAC Numbers from 1 to 1000 and Proving its Infiniteness</li>
+                    <li><strong>Authors:</strong> Kimm Ara Shaeenna S. Juson, Althea Marie D. Labiano</li>
+                    <li><strong>Research Advisers:</strong> William M. Cinense</li>
+                    <li><strong>Affiliations:</strong> Muñoz National High School Main – Senior High School, STEM Faculty</li>  
+                </ul>
+
+                <p>
+                    <strong>Credits to the Founders of PAC Numbers</strong>
+                </p>
+                <ul>
+                    <li><strong>Title:</strong> On Smith Numbers</li>
+                    <li><strong>Authors:</strong> John Paulo V. Calakhan, Joseph G. Polido</li>
+                    <li><strong>Affiliations:</strong> College of Arts and Sciences, Central Luzon State University</li>  
+                </ul>
+            </div>
+        </div>
+        
+
+        <div id="numbers" class="info-section">
+            <div class="content">
+                <h2 class="text-center">First 1-1000 PAC Numbers</h2>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Range</th>
+                        <th>PAC Values</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1-100</td>
+                        <td>22, 58, 84, 85, 94</td>
+                    </tr>
+                    <tr>
+                        <td>101-200</td>
+                        <td>136, 160, 166</td>
+                    </tr>
+                    <tr>
+                        <td>201-300</td>
+                        <td>202, 234, 250, 265, 274</td>
+                    </tr>
+                    <tr>
+                        <td>301-400</td>
+                        <td>308, 319, 336, 346, 355, 361, 364, 382, 391</td>
+                    </tr>
+                    <tr>
+                        <td>401-500</td>
+                        <td>424, 438, 454, 456, 476, 483</td>
+                    </tr>
+                    <tr>
+                        <td>501-600</td>
+                        <td>517, 526, 535, 562, 576, 588</td>
+                    </tr>
+                    <tr>
+                        <td>601-700</td>
+                        <td>627, 634, 636, 645, 648, 654, 663, 666, 690</td>
+                    </tr>
+                    <tr>
+                        <td>701-800</td>
+                        <td>706, 728, 729, 762, 778</td>
+                    </tr>
+                    <tr>
+                        <td>801-900</td>
+                        <td>825, 852, 861, 895</td>
+                    </tr>
+                    <tr>
+                        <td>901-1000</td>
+                        <td>913, 915, 922, 958, 985</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+        <div id="manual-computation" class="info-section">
+            <div class="content">
+                <h2>Manual Computation of PAC Numbers</h2>
+                <p>
+                    Below is a manual computation example for a PAC number, allowing you to verify the accuracy of the website's PAC calculator:
+                </p>
+                <p><strong>Example: 160</strong></p>
+                <ol>
+                    <li>Determine the prime factors of 160: 2 × 2 × 2 × 2 × 2 × 5 = 160, or 2<sup>5</sup> × 5.</li>
+                    <li>Calculate the digit sum of the prime factors, <strong>excluding multiplicity</strong>: 2 + 5 = 7.</li>
+                    <li>Calculate the digit sum of 160: 1 + 6 + 0 = 7.</li>
+                </ol>
+                <p>If the digit sum of a number matches the digit sum of its prime factors, it qualifies as a PAC number. Therefore, 160 is a <strong>PAC number</strong>.</p>
+            </div>
+        </div>
+
+        <div id="calculator" class="calculator" style="display: none;">
+            <h1>PAC Calculator</h1>
+            <input type="text" id="numberInput" placeholder="Enter a number..." required>
+            <button id="calculateBtn" class="btn btn-primary mt-3" onclick="calculatePAC()">Calculate</button>
+            <button id="resetBtn" style="display: none;" class="reset-btn btn btn-danger mt-3">Reset</button>
+            <div id="resultContainer" class="results" style="display: none;"></div>
+        </div>
+
+        <script>
+            function navigateToSection(section) {
+                const sections = document.querySelectorAll('.info-section, .calculator');
+                sections.forEach(s => {
+                    s.style.display = 'none';
+                });
+
+                const selectedSection = document.getElementById(section);
+                if (selectedSection) {
+                    selectedSection.style.display = 'block';
+                }
+            }
+
+            function calculatePAC() {
+                const number = parseInt(document.getElementById('numberInput').value);
+                const resultContainer = document.getElementById('resultContainer');
+
+                if (isNaN(number) || number <= 1) {
+                    resultContainer.innerHTML = '<p>Please enter a number greater than 1.</p>';
+                    resultContainer.style.display = 'block';
+                    return;
+                }
+
+                if (isPrime(number) || isNumberWithOnlySelfAsFactor(number)) {
+                    resultContainer.innerHTML = '<p>The number is not a PAC number as it is either prime or only has itself as a factor.</p>';
+                    resultContainer.style.display = 'block';
+                    return;
+                }
+
+                const primeFactors = getPrimeFactors(number);
+                const factorsWithoutMultiplicity = getFactorsWithoutMultiplicity(primeFactors);
+                const digitSumOfFactorsWithoutMultiplicity = getSingleDigitSum(getDigitSumOfFactorsWithoutMultiplicity(factorsWithoutMultiplicity));
+                const digitSumOfNumber = getSingleDigitSum(getDigitSum(number));
+
+                const isPAC = digitSumOfFactorsWithoutMultiplicity === digitSumOfNumber;
+                const pacText = isPAC ? 'Yes' : 'No';
+
+                resultContainer.innerHTML = `
+                    <p><strong>Number:</strong> ${number}</p>
+                    <p><strong>Prime Factors:</strong> ${primeFactors.join(' x ')}</p>
+                    <p><strong>Factors Without Multiplicity:</strong> ${factorsWithoutMultiplicity.join(' x ')}</p>
+                    <p><strong>Digit Sum of Factors Without Multiplicity:</strong> ${digitSumOfFactorsWithoutMultiplicity}</p>
+                    <p><strong>Digit Sum of Number:</strong> ${digitSumOfNumber}</p>
+                    <p><strong>Is PAC Number:</strong> ${pacText}</p>
+                `;
+                resultContainer.style.display = 'block';
+            }
+
+            function getPrimeFactors(n) {
+                const factors = [];
+                while (n % 2 === 0) {
+                    factors.push(2);
+                    n /= 2;
+                }
+                for (let i = 3; i <= Math.sqrt(n); i += 2) {
+                    while (n % i === 0) {
+                        factors.push(i);
+                        n /= i;
+                    }
+                }
+                if (n > 2) {
+                    factors.push(n);
+                }
+                return factors;
+            }
+
+            function getFactorsWithoutMultiplicity(factors) {
+                return [...new Set(factors)];
+            }
+
+            function getDigitSumOfFactorsWithoutMultiplicity(factorsWithoutMultiplicity) {
+                return factorsWithoutMultiplicity.reduce((sum, factor) => sum + getDigitSum(factor), 0);
+            }
+
+            function getDigitSum(n) {
+                return n.toString().split('').reduce((sum, digit) => sum + parseInt(digit), 0);
+            }
+
+            function getSingleDigitSum(n) {
+                while (n >= 10) {
+                    n = getDigitSum(n);
+                }
+                return n;
+            }
+
+            function isPrime(num) {
+                if (num <= 1) return false;
+                if (num <= 3) return true;
+                if (num % 2 === 0 || num % 3 === 0) return false;
+                for (let i = 5; i * i <= num; i += 6) {
+                    if (num % i === 0 || num % (i + 2) === 0) return false;
+                }
+                return true;
+            }
+
+            function isNumberWithOnlySelfAsFactor(num) {
+                return isPrime(num);
+            }
+
+            document.addEventListener('DOMContentLoaded', function () {
+                navigateToSection('calculator');
+            });
+        </script>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    </div>
+</body>
+
+</html>
